@@ -1,0 +1,58 @@
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
+import java.net.InetAddress;
+import java.net.Socket;
+
+
+public class ClientSide implements Runnable {
+	public static void main(String[] args) {
+		String hostName = "localhost";
+		int portNumber = 4445;
+		Socket socket = null;
+		PrintWriter outputStream = null;
+		BufferedReader responseStream = null;
+		BufferedReader thisUserStream = null;
+		boolean closed = false;
+		
+		System.out.println("Welcome to Menghong's Crappy chat system");
+		System.out.println("Connecting to " + hostName + " on port " + 	portNumber);
+		
+		// Establish connection
+		try {
+			socket = new Socket(hostName, portNumber);
+			System.out.println("Just Connected to " + s.getRemoteSocketAddress());
+			outputStream = new PrintWriter(socket.getOutputStream(), true);
+			responseStream = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+			thisUserStream = new BufferedReader(new InputStreamReader(System.in));
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+			System.out.println("Can not connect");
+		}
+		
+		// Data communication
+		if (socket != null && outputStream != null && responseStream != null && thisUserStream != null) {
+			try {
+				// One thread is used to communicate with server
+				// Another thread is used to deal with standard input
+				// This thread is used to do with standard input
+				new Thread(new ClientSide()).start();
+				// This thread is used to deal with server
+				while (!closed) {
+					outputStream.println(thisUserStream.readLine().trim());
+				}
+			}
+		}
+		
+		
+	}
+	
+	// For threading 
+	public void run() {
+		
+	}
+	
+	
+}
